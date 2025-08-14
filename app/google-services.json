@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "1061233475765",
+    "firebase_url": "https://shoppingmart-ddf32-default-rtdb.firebaseio.com",
+    "project_id": "shoppingmart-ddf32",
+    "storage_bucket": "shoppingmart-ddf32.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1061233475765:android:e043cac89242f05464befc",
+        "android_client_info": {
+          "package_name": "com.example.devmart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4hfduHWDhvFk-ZiOBFcKwTGwifS_Ubsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1061233475765:android:f122cd5d1f75327764befc",
+        "android_client_info": {
+          "package_name": "com.example.shoppingmart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4hfduHWDhvFk-ZiOBFcKwTGwifS_Ubsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
