@@ -29,7 +29,7 @@ class Home : Fragment() {
             Handler(Looper.getMainLooper()).postDelayed({
                 findNavController().navigate(R.id.action_home2_to_login)
 
-            }, 300)
+            }, 200)
 
 
 

@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.circleimageview)
     implementation(libs.lottie)
+    implementation(libs.okhttp)
 
 
 }

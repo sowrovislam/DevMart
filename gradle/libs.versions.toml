@@ -52,6 +52,8 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 circleimageview = { group = "de.hdodenhof", name = "circleimageview", version.ref = "circleImageView"}
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version = "4.10.0" }
+
 
 
 
