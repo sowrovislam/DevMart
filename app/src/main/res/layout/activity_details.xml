@@ -25,6 +25,20 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/aclonica"
+                android:gravity="center"
+                android:text="Account Book! Upload"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp"
+                android:textSize="26dp" />
+
+
+
+
             <!-- Image Selection Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"

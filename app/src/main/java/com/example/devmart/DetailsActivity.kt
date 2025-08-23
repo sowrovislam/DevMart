@@ -6,10 +6,12 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -19,8 +21,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.devmart.userdata.RetrofitClient
-import com.example.devmart.userdata.UploadResponse
+import com.example.devmart.userupload.RetrofitClient
+import com.example.devmart.userupload.UploadResponse
+import com.google.firebase.auth.FirebaseAuth
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -39,6 +42,8 @@ class DetailsActivity : AppCompatActivity() {
     private lateinit var etDescription: EditText
     private var selectedImageUri: Uri? = null
     private val REQUEST_STORAGE_PERMISSION = 100
+    private lateinit var firebaseAuth: FirebaseAuth
+    private val CONTACT_PICK_REQUEST = 1001
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK && result.data != null) {
@@ -49,6 +54,15 @@ class DetailsActivity : AppCompatActivity() {
             }
         }
     }
+
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                Toast.makeText(this, "Contacts permission Granted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Contacts permission denied", Toast.LENGTH_SHORT).show()
+            }}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +77,14 @@ class DetailsActivity : AppCompatActivity() {
         }
 
 
+           firebaseAuth= FirebaseAuth.getInstance()
+
+        if (firebaseAuth.currentUser == null) {
+            // Redirect to login screen or handle unauthenticated state
+            Toast.makeText(this, "Please log in", Toast.LENGTH_SHORT).show()
+            return
+        }
+
 
 
         imageView = findViewById(R.id.profile_image)
@@ -73,6 +95,17 @@ class DetailsActivity : AppCompatActivity() {
         val btnChooseImage = findViewById<Button>(R.id.btnSelectImage)
         val btnUpload = findViewById<Button>(R.id.btnUpload)
 
+        val btnSelectContact = findViewById<ImageButton>(R.id.btnSelectContact)
+
+
+        btnSelectContact.setOnClickListener {
+
+            pickContact()
+        }
+
+
+
+
         btnChooseImage.setOnClickListener {
             checkStoragePermission()
         }
@@ -80,6 +113,16 @@ class DetailsActivity : AppCompatActivity() {
         btnUpload.setOnClickListener {
             uploadData()
         }
+
+
+
+
+
+
+
+
+
+
     }
 
     private fun checkStoragePermission() {
@@ -135,6 +178,9 @@ class DetailsActivity : AppCompatActivity() {
         }
     }
 
+
+
+
     private fun uploadData() {
         val name = etName.text.toString().trim()
         val number = etNumber.text.toString().trim()
@@ -165,8 +211,18 @@ class DetailsActivity : AppCompatActivity() {
         val amountRequestBody = amount.toRequestBody("text/plain".toMediaTypeOrNull())
         val descriptionRequestBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
 
+        // Get user ID from FirebaseAuth
+        val user = firebaseAuth.currentUser
+        if (user == null) {
+            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val userId = user.uid
+        val userIdRequestBody = userId.toRequestBody("text/plain".toMediaTypeOrNull())
+
+
         val apiService = RetrofitClient.instance
-        apiService.uploadData(imagePart, nameRequestBody, numberRequestBody, amountRequestBody, descriptionRequestBody)
+        apiService.uploadData(imagePart, nameRequestBody, numberRequestBody, amountRequestBody, descriptionRequestBody,userIdRequestBody)
             .enqueue(object : Callback<UploadResponse> {
                 override fun onResponse(call: Call<UploadResponse>, response: Response<UploadResponse>) {
                     if (response.isSuccessful) {
@@ -219,4 +275,67 @@ class DetailsActivity : AppCompatActivity() {
         }
         return name.ifEmpty { "temp_image.jpg" }
     }
+
+
+
+    private fun checkContactsPermission() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_CONTACTS
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                pickContact()
+            }
+            else -> {
+                requestPermissionLauncher.launch(Manifest.permission.READ_CONTACTS)
+            }
+        }
+    }
+
+    private fun pickContact() {
+        try {
+            startActivityForResult(
+                Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI),
+                CONTACT_PICK_REQUEST
+            )
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error opening contacts: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CONTACT_PICK_REQUEST && resultCode == RESULT_OK) {
+            data?.data?.let { uri ->
+                contentResolver.query(
+                    uri,
+                    arrayOf(
+                        ContactsContract.CommonDataKinds.Phone.NUMBER,
+                        ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME
+                    ),
+                    null,
+                    null,
+                    null
+                )?.use {
+                    if (it.moveToFirst()) {
+                        val phoneNumber = it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                        val contactName = it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
+                        etNumber.setText(phoneNumber)
+                      etName.setText(contactName)
+                    }
+                }
+            } ?: run {
+                Toast.makeText(this, "No contact data received", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
 }

@@ -22,9 +22,9 @@
         android:theme="@style/Theme.DevMart">
         <activity
             android:name=".DetailsActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"/>
+            android:exported="true"
+            android:screenOrientation="portrait"
+           />
 
         <activity
             android:name=".MainActivity"
