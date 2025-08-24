@@ -9,6 +9,8 @@
     android:padding="24dp"
     tools:context=".Fragment.Home">
 
+
+
     <ImageView
         android:id="@+id/logoImage"
         android:layout_width="136dp"

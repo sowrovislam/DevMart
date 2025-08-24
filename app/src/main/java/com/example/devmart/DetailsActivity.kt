@@ -9,10 +9,7 @@ import android.os.Bundle
 import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.provider.OpenableColumns
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +18,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.devmart.databinding.ActivityDetailsBinding
 import com.example.devmart.userupload.RetrofitClient
 import com.example.devmart.userupload.UploadResponse
 import com.google.firebase.auth.FirebaseAuth
@@ -35,11 +33,7 @@ import java.io.File
 
 class DetailsActivity : AppCompatActivity() {
 
-    private lateinit var imageView: ImageView
-    private lateinit var etName: EditText
-    private lateinit var etNumber: EditText
-    private lateinit var etAmount: EditText
-    private lateinit var etDescription: EditText
+    private lateinit var binding: ActivityDetailsBinding
     private var selectedImageUri: Uri? = null
     private val REQUEST_STORAGE_PERMISSION = 100
     private lateinit var firebaseAuth: FirebaseAuth
@@ -49,12 +43,12 @@ class DetailsActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK && result.data != null) {
             selectedImageUri = result.data?.data
             selectedImageUri?.let { uri ->
-                imageView.setImageURI(uri)
+                binding.profileImage.setImageURI(uri)
+
                 Toast.makeText(this, "Image selected", Toast.LENGTH_SHORT).show()
             }
         }
     }
-
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -62,67 +56,41 @@ class DetailsActivity : AppCompatActivity() {
                 Toast.makeText(this, "Contacts permission Granted", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "Contacts permission denied", Toast.LENGTH_SHORT).show()
-            }}
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_details)
+        binding = ActivityDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-
-           firebaseAuth= FirebaseAuth.getInstance()
+        binding.animationView.visibility = View.GONE
+        firebaseAuth = FirebaseAuth.getInstance()
 
         if (firebaseAuth.currentUser == null) {
-            // Redirect to login screen or handle unauthenticated state
             Toast.makeText(this, "Please log in", Toast.LENGTH_SHORT).show()
             return
         }
 
-
-
-        imageView = findViewById(R.id.profile_image)
-        etName = findViewById(R.id.etName)
-        etNumber = findViewById(R.id.etNumber)
-        etAmount = findViewById(R.id.etAmount)
-        etDescription = findViewById(R.id.description)
-        val btnChooseImage = findViewById<Button>(R.id.btnSelectImage)
-        val btnUpload = findViewById<Button>(R.id.btnUpload)
-
-        val btnSelectContact = findViewById<ImageButton>(R.id.btnSelectContact)
-
-
-        btnSelectContact.setOnClickListener {
-
+        binding.btnSelectContact.setOnClickListener {
             pickContact()
         }
 
-
-
-
-        btnChooseImage.setOnClickListener {
+        binding.btnSelectImage.setOnClickListener {
             checkStoragePermission()
         }
 
-        btnUpload.setOnClickListener {
+        binding.btnUpload.setOnClickListener {
             uploadData()
+//            binding.animationView.visibility = View.VISIBLE
         }
-
-
-
-
-
-
-
-
-
-
     }
 
     private fun checkStoragePermission() {
@@ -178,18 +146,17 @@ class DetailsActivity : AppCompatActivity() {
         }
     }
 
-
-
-
     private fun uploadData() {
-        val name = etName.text.toString().trim()
-        val number = etNumber.text.toString().trim()
-        val amount = etAmount.text.toString().trim()
-        val description = etDescription.text.toString().trim()
+        val name = binding.etName.text.toString().trim()
+        val number = binding.etNumber.text.toString().trim()
+        val amount = binding.etAmount.text.toString().trim()
+        val description = binding.description.text.toString().trim()
 
         if (name.isEmpty() || number.isEmpty() || amount.isEmpty() || description.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             return
+        }else{
+            binding.animationView.visibility = View.VISIBLE
         }
 
         if (selectedImageUri == null) {
@@ -211,7 +178,6 @@ class DetailsActivity : AppCompatActivity() {
         val amountRequestBody = amount.toRequestBody("text/plain".toMediaTypeOrNull())
         val descriptionRequestBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
 
-        // Get user ID from FirebaseAuth
         val user = firebaseAuth.currentUser
         if (user == null) {
             Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
@@ -220,29 +186,32 @@ class DetailsActivity : AppCompatActivity() {
         val userId = user.uid
         val userIdRequestBody = userId.toRequestBody("text/plain".toMediaTypeOrNull())
 
-
         val apiService = RetrofitClient.instance
-        apiService.uploadData(imagePart, nameRequestBody, numberRequestBody, amountRequestBody, descriptionRequestBody,userIdRequestBody)
+        apiService.uploadData(imagePart, nameRequestBody, numberRequestBody, amountRequestBody, descriptionRequestBody, userIdRequestBody)
             .enqueue(object : Callback<UploadResponse> {
                 override fun onResponse(call: Call<UploadResponse>, response: Response<UploadResponse>) {
+
                     if (response.isSuccessful) {
                         val uploadResponse = response.body()
                         uploadResponse?.let {
                             Toast.makeText(this@DetailsActivity, it.message, Toast.LENGTH_LONG).show()
-                            etName.text.clear()
-                            etNumber.text.clear()
-                            etAmount.text.clear()
-                            etDescription.text.clear()
-                            imageView.setImageDrawable(null)
+                            binding.etName.text?.clear()
+                            binding.etNumber.text?.clear()
+                            binding.etAmount.text?.clear()
+                            binding.description.text?.clear()
+                            binding.profileImage.setImageDrawable(null)
                             selectedImageUri = null
+                            binding.animationView.visibility = View.GONE // Added to hide animation after successful upload
                         }
                     } else {
                         Toast.makeText(this@DetailsActivity, "Upload failed: ${response.message()}", Toast.LENGTH_LONG).show()
+                        binding.animationView.visibility = View.VISIBLE
                     }
                 }
 
                 override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
                     Toast.makeText(this@DetailsActivity, "Error: ${t.message}", Toast.LENGTH_LONG).show()
+                    binding.animationView.visibility = View.VISIBLE
                 }
             })
     }
@@ -275,8 +244,6 @@ class DetailsActivity : AppCompatActivity() {
         }
         return name.ifEmpty { "temp_image.jpg" }
     }
-
-
 
     private fun checkContactsPermission() {
         when {
@@ -320,8 +287,9 @@ class DetailsActivity : AppCompatActivity() {
                     if (it.moveToFirst()) {
                         val phoneNumber = it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
                         val contactName = it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
-                        etNumber.setText(phoneNumber)
-                      etName.setText(contactName)
+                        binding.etNumber.setText(phoneNumber)
+                        binding.etName.setText(contactName)
+
                     }
                 }
             } ?: run {
@@ -329,13 +297,4 @@ class DetailsActivity : AppCompatActivity() {
             }
         }
     }
-
-
-
-
-
-
-
-
-
 }

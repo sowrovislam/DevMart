@@ -58,8 +58,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
 
-
-
     implementation(libs.lifecycle.livedata)
     implementation(libs.lifecycle.viewmodel)
 

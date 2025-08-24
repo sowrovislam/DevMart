@@ -9,6 +9,23 @@
     android:background="@color/background_color"
     tools:context=".DetailsActivity">
 
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:visibility="gone"
+        android:id="@+id/animationView"
+        android:layout_width="259dp"
+        android:layout_height="247dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/scrollView"
+        app:layout_constraintTop_toTopOf="@+id/scrollView"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/progragebar" />
+
+
+
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -53,17 +70,17 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="20dp"
-                    android:gravity="center">
+                    android:padding="20dp">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profile_image"
                         android:layout_width="120dp"
                         android:layout_height="120dp"
                         android:src="@drawable/outline_person_add_alt_1_24"
-                        app:civ_border_width="3dp"
-                        app:civ_border_color="@color/primary_color"/>
+                        app:civ_border_color="@color/primary_color"
+                        app:civ_border_width="4dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSelectImage"
@@ -73,10 +90,10 @@
                         android:layout_marginTop="16dp"
                         android:text="Select Image"
                         android:textSize="16sp"
+                        app:cornerRadius="8dp"
                         app:icon="@drawable/outline_animated_images_24"
                         app:iconTint="@color/primary_color"
-                        app:strokeColor="@color/primary_color"
-                        app:cornerRadius="8dp"/>
+                        app:strokeColor="@color/primary_color" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
