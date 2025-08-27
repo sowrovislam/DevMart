@@ -44,7 +44,6 @@ class DetailsActivity : AppCompatActivity() {
             selectedImageUri = result.data?.data
             selectedImageUri?.let { uri ->
                 binding.profileImage.setImageURI(uri)
-
                 Toast.makeText(this, "Image selected", Toast.LENGTH_SHORT).show()
             }
         }
@@ -53,7 +52,8 @@ class DetailsActivity : AppCompatActivity() {
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
-                Toast.makeText(this, "Contacts permission Granted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Contacts permission granted", Toast.LENGTH_SHORT).show()
+                pickContact()
             } else {
                 Toast.makeText(this, "Contacts permission denied", Toast.LENGTH_SHORT).show()
             }
@@ -76,11 +76,12 @@ class DetailsActivity : AppCompatActivity() {
 
         if (firebaseAuth.currentUser == null) {
             Toast.makeText(this, "Please log in", Toast.LENGTH_SHORT).show()
+            finish() // Close activity if user is not authenticated
             return
         }
 
         binding.btnSelectContact.setOnClickListener {
-            pickContact()
+            checkContactsPermission()
         }
 
         binding.btnSelectImage.setOnClickListener {
@@ -89,7 +90,6 @@ class DetailsActivity : AppCompatActivity() {
 
         binding.btnUpload.setOnClickListener {
             uploadData()
-//            binding.animationView.visibility = View.VISIBLE
         }
     }
 
@@ -151,22 +151,28 @@ class DetailsActivity : AppCompatActivity() {
         val number = binding.etNumber.text.toString().trim()
         val amount = binding.etAmount.text.toString().trim()
         val description = binding.description.text.toString().trim()
+        val due = binding.etdue.text.toString().trim()
 
-        if (name.isEmpty() || number.isEmpty() || amount.isEmpty() || description.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+        // Validate all required fields, including due
+        if (name.isEmpty() || number.isEmpty() || amount.isEmpty() || description.isEmpty() ) {
+            Toast.makeText(this, "Please fill in all fields, including due date", Toast.LENGTH_SHORT).show()
+            binding.animationView.visibility = View.GONE
             return
-        }else{
+        } else {
             binding.animationView.visibility = View.VISIBLE
         }
 
+
         if (selectedImageUri == null) {
             Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show()
+            binding.animationView.visibility = View.GONE
             return
         }
 
         val file = getFileFromUri(selectedImageUri!!)
         if (file == null) {
             Toast.makeText(this, "Failed to get file", Toast.LENGTH_SHORT).show()
+            binding.animationView.visibility = View.GONE
             return
         }
 
@@ -177,20 +183,22 @@ class DetailsActivity : AppCompatActivity() {
         val numberRequestBody = number.toRequestBody("text/plain".toMediaTypeOrNull())
         val amountRequestBody = amount.toRequestBody("text/plain".toMediaTypeOrNull())
         val descriptionRequestBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
+        val dueRequestBody = due.toRequestBody("text/plain".toMediaTypeOrNull())
 
         val user = firebaseAuth.currentUser
         if (user == null) {
             Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
+            binding.animationView.visibility = View.GONE
             return
         }
         val userId = user.uid
         val userIdRequestBody = userId.toRequestBody("text/plain".toMediaTypeOrNull())
 
         val apiService = RetrofitClient.instance
-        apiService.uploadData(imagePart, nameRequestBody, numberRequestBody, amountRequestBody, descriptionRequestBody, userIdRequestBody)
+        apiService.uploadData(imagePart, nameRequestBody, numberRequestBody, amountRequestBody, descriptionRequestBody, userIdRequestBody, dueRequestBody)
             .enqueue(object : Callback<UploadResponse> {
                 override fun onResponse(call: Call<UploadResponse>, response: Response<UploadResponse>) {
-
+                    binding.animationView.visibility = View.GONE
                     if (response.isSuccessful) {
                         val uploadResponse = response.body()
                         uploadResponse?.let {
@@ -199,19 +207,19 @@ class DetailsActivity : AppCompatActivity() {
                             binding.etNumber.text?.clear()
                             binding.etAmount.text?.clear()
                             binding.description.text?.clear()
+                            binding.etdue.text?.clear()
                             binding.profileImage.setImageDrawable(null)
                             selectedImageUri = null
-                            binding.animationView.visibility = View.GONE // Added to hide animation after successful upload
                         }
                     } else {
-                        Toast.makeText(this@DetailsActivity, "Upload failed: ${response.message()}", Toast.LENGTH_LONG).show()
-                        binding.animationView.visibility = View.VISIBLE
+                        val errorMessage = response.errorBody()?.string() ?: response.message()
+                        Toast.makeText(this@DetailsActivity, "Upload failed: $errorMessage", Toast.LENGTH_LONG).show()
                     }
                 }
 
                 override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
                     Toast.makeText(this@DetailsActivity, "Error: ${t.message}", Toast.LENGTH_LONG).show()
-                    binding.animationView.visibility = View.VISIBLE
+                    binding.animationView.visibility = View.GONE
                 }
             })
     }
@@ -287,9 +295,8 @@ class DetailsActivity : AppCompatActivity() {
                     if (it.moveToFirst()) {
                         val phoneNumber = it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
                         val contactName = it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
-                        binding.etNumber.setText(phoneNumber)
                         binding.etName.setText(contactName)
-
+                        binding.etNumber.setText(phoneNumber)
                     }
                 }
             } ?: run {

@@ -16,6 +16,7 @@ interface ApiService {
         @Part("numbar") numbar: RequestBody,
         @Part("amount") amount: RequestBody,
         @Part("description") description: RequestBody,
-        @Part("user_id") user_id: RequestBody
+        @Part("user_id") user_id: RequestBody,
+        @Part("due") due: RequestBody
     ): Call<UploadResponse>
 }

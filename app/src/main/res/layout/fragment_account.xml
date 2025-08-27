@@ -106,7 +106,7 @@
                         android:layout_marginBottom="4dp"
                         android:fontFamily="@font/abhaya_libre"
                         android:letterSpacing="0.03"
-                        android:text="YOU OWE"
+                        android:text="YOU OWE DUE"
                         android:textAllCaps="true"
                         android:textColor="#666666"
                         android:textSize="12sp" />
@@ -120,12 +120,17 @@
                         android:textColor="#F44336"
                         android:textSize="22sp" />
                 </LinearLayout>
+
+
+
             </LinearLayout>
+
+
         </com.google.android.material.card.MaterialCardView>
 
         <!-- Modern Search Bar -->
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchBar"
+        <SearchView
+            android:id="@+id/searchView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

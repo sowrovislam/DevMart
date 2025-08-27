@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
+import android.widget.SearchView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -28,22 +29,22 @@ class AccountFragment : Fragment() {
     private val viewModel: UserViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
+    private lateinit var adapter: UserAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAccountBinding.inflate(inflater, container, false)
-
-        // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
-
-        // Initialize views
         recyclerView = binding.recyclerView
-        progressBar = binding.progressBar // Ensure progressBar is in fragment_account.xml
+        progressBar = binding.progressBar
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Fetch data for the logged-in user
+        // 🔹 Initialize adapter once with empty list
+        adapter = UserAdapter(mutableListOf())
+        recyclerView.adapter = adapter
+
         val currentUser = auth.currentUser
         val userId = currentUser?.uid
 
@@ -53,15 +54,25 @@ class AccountFragment : Fragment() {
         } else {
             progressBar.visibility = View.GONE
             Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
-            // Optionally navigate to a login screen
-            // findNavController().navigate(R.id.action_accountFragment_to_loginFragment)
         }
 
-        // Observe ViewModel data
+
+
+
+
+
+        // 🔹 Observe LiveData
         viewModel.userData.observe(viewLifecycleOwner) { response ->
             progressBar.visibility = View.GONE
             if (response.success == true && response.data != null) {
-                recyclerView.adapter = UserAdapter(response.data.filterNotNull())
+                adapter.updateData(response.data.filterNotNull())
+
+                val total = adapter.getTotalAmount()
+                binding.balanceAmount.text = "${String.format("%.2f", total)}"
+
+                val totaldue = adapter.getTotalAmountdue()
+                binding.dueAmount.text = "${String.format("%.2f", totaldue)}"
+
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -71,11 +82,25 @@ class AccountFragment : Fragment() {
             }
         }
 
-        // Navigation
+        // 🔹 SearchView filter
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                adapter.filter(query.orEmpty())
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter(newText.orEmpty())
+                return true
+            }
+        })
+
+        // 🔹 Navigate to Profile
         binding.profileImage.setOnClickListener {
             findNavController().navigate(R.id.action_accountFragment_to_profileFragment)
         }
 
+        // 🔹 Open DetailsActivity to add new user
         binding.fabAddPeople.setOnClickListener {
             startActivity(Intent(requireActivity(), DetailsActivity::class.java))
         }
@@ -85,13 +110,11 @@ class AccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Handle back press to exit the app
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    requireActivity().finishAffinity() // Exit the app
+                    requireActivity().finishAffinity()
                 }
             }
         )
@@ -99,6 +122,6 @@ class AccountFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null // Prevent memory leaks
+        _binding = null
     }
 }

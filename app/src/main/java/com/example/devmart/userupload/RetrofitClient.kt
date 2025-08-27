@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    private const val BASE_URL = "http://10.234.136.10/" // Replace with your server URL
+    private const val BASE_URL = "http://10.18.221.10/" // Replace with your server URL
 
     val instance: ApiService by lazy {
         val retrofit = Retrofit.Builder()

@@ -64,10 +64,12 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.retrofit)
+    implementation(libs.glide)
     implementation(libs.converter.gson)
     implementation(libs.circleimageview)
     implementation(libs.lottie)
     implementation(libs.okhttp)
+
 
 
 }

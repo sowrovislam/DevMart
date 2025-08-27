@@ -25,6 +25,8 @@ data class ApiResponse(
         val name: String? = null,
         @SerializedName("numbar")
         val numbar: String? = null,
+        @SerializedName("due")
+        val due: String? = null,
         @SerializedName("user_id")
         val userId: String? = null
     )

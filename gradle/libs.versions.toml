@@ -55,6 +55,8 @@ firebase-database = { group = "com.google.firebase", name = "firebase-database",
 
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version = "4.10.0" }
 
+glide = { group = "com.github.bumptech.glide", name = "glide", version = "4.16.0" }
+
 
 
 [plugins]

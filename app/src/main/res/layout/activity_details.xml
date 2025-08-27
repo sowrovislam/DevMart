@@ -103,6 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:layout_marginTop="16dp"
+                app:counterMaxLength="15"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/primary_color"
                 app:hintTextColor="@color/primary_color"
@@ -135,6 +136,7 @@
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     app:boxStrokeColor="@color/primary_color"
                     app:hintTextColor="@color/primary_color"
+                    app:counterMaxLength="13"
                     app:startIconDrawable="@drawable/outline_contact_phone_24"
                     app:startIconTint="@color/primary_color">
 
@@ -169,7 +171,7 @@
                 app:hintTextColor="@color/primary_color"
                 app:startIconDrawable="@drawable/ic_baseline_attach_money_24"
                 app:startIconTint="@color/primary_color"
-                app:prefixText="$ "
+                app:prefixText=""
                 app:prefixTextColor="@color/primary_color">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -181,12 +183,36 @@
                     android:textSize="16sp"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginBottom="16dp"
+                app:helperText="*Optional"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/primary_color"
+                app:hintTextColor="@color/primary_color"
+                app:startIconDrawable="@drawable/ic_baseline_attach_money_24"
+                app:startIconTint="@color/primary_color"
+                app:prefixText=""
+                app:prefixTextColor="@color/primary_color">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etdue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Due Amount"
+                    android:inputType="numberDecimal"
+                    android:textSize="16sp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
             <!-- Description Field -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:layout_marginBottom="16dp"
+                app:counterMaxLength="125"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/primary_color"
                 app:hintTextColor="@color/primary_color">
