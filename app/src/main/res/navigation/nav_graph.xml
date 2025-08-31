@@ -49,6 +49,7 @@
         <action
             android:id="@+id/action_accountFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -67,4 +68,5 @@
         android:name="com.example.devmart.ForgetPassword"
         android:label="fragment_forget_password"
         tools:layout="@layout/fragment_forget_password" />
+
 </navigation>

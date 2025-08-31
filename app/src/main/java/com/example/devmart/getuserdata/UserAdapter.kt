@@ -1,13 +1,16 @@
 package com.example.devmart.getuserdata
 
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.devmart.Details_data_Activity
 import com.example.devmart.R
 
 class UserAdapter(private val userList: MutableList<ApiResponse.Data>) :
@@ -23,6 +26,7 @@ class UserAdapter(private val userList: MutableList<ApiResponse.Data>) :
         val tvDescription: TextView = itemView.findViewById(R.id.userDescription)
         val ivImage: ImageView = itemView.findViewById(R.id.userImage)
         val tvDueAmount: TextView = itemView.findViewById(R.id.userDueAmount)
+        val CardDetails: CardView = itemView.findViewById(R.id.CardDetails)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -49,6 +53,21 @@ class UserAdapter(private val userList: MutableList<ApiResponse.Data>) :
 
 
 
+        holder.CardDetails.setOnClickListener {
+            val intent = Intent(holder.itemView.context, Details_data_Activity::class.java)
+
+            // Optional: pass data
+             intent.putExtra("userName", user.name)
+             intent.putExtra("numbar", user.numbar)
+            intent.putExtra("amount", user.amount)
+
+            intent.putExtra("due", user.due)
+            intent.putExtra("description", user.description)
+            intent.putExtra("image", user.image)
+
+            intent.putExtra("date", user.date)
+            holder.itemView.context.startActivity(intent)
+        }
 
 
 

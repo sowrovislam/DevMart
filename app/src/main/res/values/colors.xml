@@ -77,4 +77,27 @@
         <color name="primary_color">#6200EE</color>
         <color name="background_grey">#FAFAFA</color>
 
+        <!-- Backgrounds -->
+        <color name="background_light">#F5F5F5</color> <!-- light gray background -->
+
+
+        <!-- Text -->
+        <color name="text_primary">#212121</color> <!-- dark gray for main text -->
+        <color name="text_secondary">#757575</color> <!-- medium gray for secondary text -->
+
+        <!-- Amounts -->
+        <color name="amount_color">#4CAF50</color> <!-- green for paid amount -->
+        <color name="due_amount_color">#F44336</color> <!-- red for due amount -->
+
+        <!-- Divider -->
+        <color name="divider_color">#BDBDBD</color> <!-- light gray divider -->
+
+        <!-- Buttons -->
+        <color name="button_primary">#6200EE</color> <!-- purple button background -->
+        <color name="button_secondary">#03DAC5</color> <!-- optional secondary button -->
+
+        <!-- Optional: call button background -->
+        <color name="call_button_bg">#E0E0E0</color> <!-- light gray circle -->
+
+
 </resources>

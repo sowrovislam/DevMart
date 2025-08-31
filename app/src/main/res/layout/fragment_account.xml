@@ -81,7 +81,7 @@
                         android:fontFamily="@font/aclonica"
                         android:text="₹4,444"
                         android:textColor="#4CAF50"
-                        android:textSize="22sp" />
+                        android:textSize="13sp" />
                 </LinearLayout>
 
                 <!-- Divider -->
@@ -118,7 +118,7 @@
                         android:fontFamily="@font/aclonica"
                         android:text="₹5,555"
                         android:textColor="#F44336"
-                        android:textSize="22sp" />
+                        android:textSize="13sp" />
                 </LinearLayout>
 
 

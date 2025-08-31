@@ -2,6 +2,8 @@
 <resources>
     <array name="preloaded_fonts" translatable="false">
         <item>@font/abhaya_libre</item>
+        <item>@font/aboreto</item>
         <item>@font/aclonica</item>
+        <item>@font/almendra_bold_italic</item>
     </array>
 </resources>
