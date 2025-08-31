@@ -110,6 +110,8 @@
 
             <!-- Description -->
             <TextView
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:id="@+id/userDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

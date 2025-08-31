@@ -6,38 +6,40 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.example.devmart.databinding.FragmentAccountBinding
 import com.example.devmart.databinding.FragmentProfileBinding
 import com.google.firebase.auth.FirebaseAuth
 
-
 class ProfileFragment : Fragment() {
 
- lateinit var binding: FragmentProfileBinding
- lateinit var auth: FirebaseAuth
-
-
+    private lateinit var binding: FragmentProfileBinding
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-        binding= FragmentProfileBinding.inflate(layoutInflater,container,false)
+        // Initialize FirebaseAuth
+        auth = FirebaseAuth.getInstance()
 
-
-
-
-
-        binding.btnLogout.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            findNavController().navigate(R.id.action_profileFragment_to_login)
+        // Show user info
+        val user = auth.currentUser
+        if (user != null) {
+            binding.tvEmail.text = user.email  // Assuming you have a TextView with id = tvEmail
+        } else {
+            binding.tvEmail.text = "No user logged in"
         }
 
 
 
+
+        // Logout
+        binding.btnLogout.setOnClickListener {
+            auth.signOut()
+            findNavController().navigate(R.id.action_profileFragment_to_login)
+        }
+
         return binding.root
-
-
     }
 }

@@ -59,10 +59,12 @@ class UserAdapter(private val userList: MutableList<ApiResponse.Data>) :
         if (!user.image.isNullOrEmpty()) {
             Log.d("UserAdapter", "Loading image: ${user.image}")
 
-            Glide.with(holder.itemView.context)
+            Glide.with(holder.itemView)
                 .load(user.image)
                 .placeholder(R.drawable.logo)
                 .into(holder.ivImage)
+
+
         } else {
             holder.ivImage.setImageResource(R.drawable.logo)
         }

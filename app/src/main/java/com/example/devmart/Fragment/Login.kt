@@ -62,6 +62,8 @@ class Login : Fragment() {
                 return@setOnClickListener
             }
 
+            
+
             viewModel.login(email, password)
         }
 
@@ -76,6 +78,13 @@ class Login : Fragment() {
 //                requireActivity().finish()  // Prevents back navigation to login
             }
         }
+
+        binding.tvForgetPassword.setOnClickListener {
+
+            findNavController().navigate(R.id.action_login_to_forgetPassword)
+
+        }
+
 
         return binding.root
     }

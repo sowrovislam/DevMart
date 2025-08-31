@@ -10,6 +10,7 @@ import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.navigation.findNavController
 import com.example.devmart.databinding.ActivityDetailsBinding
 import com.example.devmart.userupload.RetrofitClient
 import com.example.devmart.userupload.UploadResponse
@@ -63,7 +65,12 @@ class DetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityDetailsBinding.inflate(layoutInflater)
+        window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(binding.root)
+
+
+
+
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -90,6 +97,7 @@ class DetailsActivity : AppCompatActivity() {
 
         binding.btnUpload.setOnClickListener {
             uploadData()
+            binding.btnUpload.isEnabled = false
         }
     }
 
@@ -147,6 +155,7 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     private fun uploadData() {
+
         val name = binding.etName.text.toString().trim()
         val number = binding.etNumber.text.toString().trim()
         val amount = binding.etAmount.text.toString().trim()
@@ -201,6 +210,7 @@ class DetailsActivity : AppCompatActivity() {
                     binding.animationView.visibility = View.GONE
                     if (response.isSuccessful) {
                         val uploadResponse = response.body()
+
                         uploadResponse?.let {
                             Toast.makeText(this@DetailsActivity, it.message, Toast.LENGTH_LONG).show()
                             binding.etName.text?.clear()
@@ -210,16 +220,20 @@ class DetailsActivity : AppCompatActivity() {
                             binding.etdue.text?.clear()
                             binding.profileImage.setImageDrawable(null)
                             selectedImageUri = null
+                            findNavController(R.id.nav_host_fragment).navigate(R.id.accountFragment)
                         }
                     } else {
                         val errorMessage = response.errorBody()?.string() ?: response.message()
                         Toast.makeText(this@DetailsActivity, "Upload failed: $errorMessage", Toast.LENGTH_LONG).show()
+                        binding.btnUpload.isEnabled = true
+
                     }
                 }
 
                 override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
                     Toast.makeText(this@DetailsActivity, "Error: ${t.message}", Toast.LENGTH_LONG).show()
                     binding.animationView.visibility = View.GONE
+                    binding.btnUpload.isEnabled = true
                 }
             })
     }

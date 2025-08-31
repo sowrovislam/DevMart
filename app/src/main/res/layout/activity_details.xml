@@ -1,40 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
+    android:fillViewport="true"
     tools:context=".DetailsActivity">
 
 
     <com.airbnb.lottie.LottieAnimationView
-        android:visibility="gone"
         android:id="@+id/animationView"
         android:layout_width="259dp"
         android:layout_height="247dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/scrollView"
-        app:layout_constraintTop_toTopOf="@+id/scrollView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
         app:lottie_rawRes="@raw/progragebar" />
 
-
-
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollView"
+    <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:scrollbars="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,14 +41,12 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:fontFamily="@font/aclonica"
                 android:gravity="center"
                 android:text="Account Book! Upload"
                 android:textColor="@color/black"
-                android:layout_marginTop="8dp"
                 android:textSize="26dp" />
-
-
 
 
             <!-- Image Selection Card -->
@@ -62,10 +55,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:layout_marginTop="24dp"
-                app:cardElevation="4dp"
-                app:cardCornerRadius="12dp"
+                android:layout_marginBottom="16dp"
+
                 app:cardBackgroundColor="@color/card_background"
-                android:layout_marginBottom="16dp">
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -99,13 +93,13 @@
 
             <!-- Name Field -->
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:layout_marginTop="16dp"
-                app:counterMaxLength="15"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/primary_color"
+                app:counterMaxLength="15"
                 app:hintTextColor="@color/primary_color"
                 app:startIconDrawable="@drawable/outline_person_add_alt_1_24"
                 app:startIconTint="@color/primary_color">
@@ -116,27 +110,27 @@
                     android:layout_height="wrap_content"
                     android:hint="Enter Name"
                     android:inputType="textPersonName"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Number Field with Contact Picker -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginHorizontal="8dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     app:boxStrokeColor="@color/primary_color"
-                    app:hintTextColor="@color/primary_color"
                     app:counterMaxLength="13"
+                    app:hintTextColor="@color/primary_color"
                     app:startIconDrawable="@drawable/outline_contact_phone_24"
                     app:startIconTint="@color/primary_color">
 
@@ -146,7 +140,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Enter Number"
                         android:inputType="phone"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageButton
@@ -154,25 +148,25 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="12dp"
-                    android:src="@drawable/outline_contact_phone_24"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Select from contacts"
-                    app:tint="@color/primary_color"/>
+                    android:src="@drawable/outline_contact_phone_24"
+                    app:tint="@color/primary_color" />
             </LinearLayout>
 
             <!-- Amount Field -->
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:layout_marginBottom="16dp"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/primary_color"
                 app:hintTextColor="@color/primary_color"
-                app:startIconDrawable="@drawable/ic_baseline_attach_money_24"
-                app:startIconTint="@color/primary_color"
                 app:prefixText=""
-                app:prefixTextColor="@color/primary_color">
+                app:prefixTextColor="@color/primary_color"
+                app:startIconDrawable="@drawable/ic_baseline_attach_money_24"
+                app:startIconTint="@color/primary_color">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAmount"
@@ -180,22 +174,22 @@
                     android:layout_height="wrap_content"
                     android:hint="Enter Amount"
                     android:inputType="numberDecimal"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:layout_marginBottom="16dp"
-                app:helperText="*Optional"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/primary_color"
+                app:helperText="*Optional"
                 app:hintTextColor="@color/primary_color"
-                app:startIconDrawable="@drawable/ic_baseline_attach_money_24"
-                app:startIconTint="@color/primary_color"
                 app:prefixText=""
-                app:prefixTextColor="@color/primary_color">
+                app:prefixTextColor="@color/primary_color"
+                app:startIconDrawable="@drawable/ic_baseline_attach_money_24"
+                app:startIconTint="@color/primary_color">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etdue"
@@ -203,18 +197,18 @@
                     android:layout_height="wrap_content"
                     android:hint="Enter Due Amount"
                     android:inputType="numberDecimal"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Description Field -->
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:layout_marginBottom="16dp"
-                app:counterMaxLength="125"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/primary_color"
+                app:counterMaxLength="125"
                 app:hintTextColor="@color/primary_color">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -225,7 +219,7 @@
                     android:inputType="textMultiLine"
                     android:minLines="4"
                     android:paddingBottom="16dp"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Upload Button -->
@@ -238,13 +232,13 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="16dp"
                 android:text="Upload Data"
-                android:textSize="16sp"
                 android:textAllCaps="false"
+                android:textSize="16sp"
+                app:backgroundTint="@color/primary_color"
                 app:cornerRadius="12dp"
                 app:icon="@drawable/outline_cloud_upload_24"
-                app:iconTint="@android:color/white"
                 app:iconGravity="textStart"
-                app:backgroundTint="@color/primary_color"/>
+                app:iconTint="@android:color/white" />
 
             <!-- Response Text -->
             <TextView
@@ -256,7 +250,8 @@
                 android:layout_marginBottom="24dp"
                 android:textAlignment="center"
                 android:textColor="@color/primary_color"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_login_to_accountFragment"
             app:destination="@id/accountFragment" />
+        <action
+            android:id="@+id/action_login_to_forgetPassword"
+            app:destination="@id/forgetPassword" />
     </fragment>
     <fragment
         android:id="@+id/signup"
@@ -59,4 +62,9 @@
             android:id="@+id/action_profileFragment_to_login"
             app:destination="@id/login" />
     </fragment>
+    <fragment
+        android:id="@+id/forgetPassword"
+        android:name="com.example.devmart.ForgetPassword"
+        android:label="fragment_forget_password"
+        tools:layout="@layout/fragment_forget_password" />
 </navigation>
