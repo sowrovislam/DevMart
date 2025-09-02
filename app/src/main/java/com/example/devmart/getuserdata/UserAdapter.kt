@@ -11,7 +11,12 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.devmart.Details_data_Activity
+import com.example.devmart.EdtActivity
 import com.example.devmart.R
+import de.hdodenhof.circleimageview.CircleImageView
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class UserAdapter(private val userList: MutableList<ApiResponse.Data>) :
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
@@ -19,14 +24,14 @@ class UserAdapter(private val userList: MutableList<ApiResponse.Data>) :
     private var filteredItems = userList.toMutableList()
 
     class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvName: TextView = itemView.findViewById(R.id.userName)
-        val tvNumbar: TextView = itemView.findViewById(R.id.userNumber)
-        val tvAmount: TextView = itemView.findViewById(R.id.userAmount)
-        val tvDate: TextView = itemView.findViewById(R.id.userDate)
+        val tvName: TextView = itemView.findViewById(R.id.billTitle)
+        val tvNumbar: TextView = itemView.findViewById(R.id.accountNumber)
+        val tvAmount: TextView = itemView.findViewById(R.id.amount)
+        val btnEdit: TextView = itemView.findViewById(R.id.btnEdit)
         val tvDescription: TextView = itemView.findViewById(R.id.userDescription)
-        val ivImage: ImageView = itemView.findViewById(R.id.userImage)
-        val tvDueAmount: TextView = itemView.findViewById(R.id.userDueAmount)
-        val CardDetails: CardView = itemView.findViewById(R.id.CardDetails)
+        val ivImage: CircleImageView = itemView.findViewById(R.id.userImage)
+        val tvDueAmount: TextView = itemView.findViewById(R.id.dueDate)
+        val CardDetails: CardView = itemView.findViewById(R.id.cardView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -41,15 +46,15 @@ class UserAdapter(private val userList: MutableList<ApiResponse.Data>) :
         holder.tvNumbar.text = "Number: ${user.numbar ?: "N/A"}"
         holder.tvAmount.text = "Amount: ${user.amount ?: "N/A"}"
         holder.tvDueAmount.text = "Amount: ${user.due ?: "N/A"}"
-        holder.tvDate.text = "Date: ${user.date ?: "N/A"}"
+//        holder.tvDate.text = "Date: ${user.date ?: "N/A"}"
         holder.tvDescription.text = "Description: ${user.description ?: "N/A"}"
 
         val amountValue = user.amount?.toDoubleOrNull() ?: 0.0
         val dueValue = user.due?.toDoubleOrNull() ?: 0.0
 
-        val remainingDue = dueValue - amountValue
 
-        holder.tvDueAmount.text = "Due: $remainingDue"
+
+        holder.tvDueAmount.text = "Due: $dueValue"
 
 
 
@@ -69,9 +74,31 @@ class UserAdapter(private val userList: MutableList<ApiResponse.Data>) :
             holder.itemView.context.startActivity(intent)
         }
 
+         holder.btnEdit.setOnClickListener {
+             val intent = Intent(holder.itemView.context, EdtActivity::class.java)
+
+             // Optional: pass data
+             intent.putExtra("userName", user.name)
+             intent.putExtra("numbar", user.numbar)
+             intent.putExtra("amount", user.amount)
+
+             intent.putExtra("due", user.due)
+             intent.putExtra("description", user.description)
+             intent.putExtra("image", user.image)
+
+             intent.putExtra("id",user.id)
+
+             val currentDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+             intent.putExtra("date", currentDate)
+             intent.putExtra("userId",user.userId)
+             holder.itemView.context.startActivity(intent)
 
 
 
+//             intent.putExtra("date", user.date)
+
+
+         }
 
 
 
@@ -122,50 +149,10 @@ class UserAdapter(private val userList: MutableList<ApiResponse.Data>) :
         notifyDataSetChanged()
     }
 
-    // 🔹 Add a single item dynamically
-    fun addItem(newItem: ApiResponse.Data) {
-        userList.add(newItem)
-        filteredItems.add(newItem)
-        notifyItemInserted(filteredItems.size - 1)
+
+    fun reverseItems() {
+        filteredItems.reverse() // reverses in-place
+        notifyDataSetChanged() // refresh RecyclerView
     }
 
-    // 🔹 Remove a single item
-    fun removeItem(position: Int) {
-        if (position in 0 until filteredItems.size) {
-            val item = filteredItems[position]
-            userList.remove(item) // Remove from original list
-            filteredItems.removeAt(position) // Remove from filtered list
-            notifyItemRemoved(position)
-            // Notify range to handle any shifts in positions
-            notifyItemRangeChanged(position, filteredItems.size - position)
-        }
-    }
-
-    // 🔹 Update a single item
-    fun updateItem(position: Int, updatedItem: ApiResponse.Data) {
-        if (position in 0 until filteredItems.size) {
-            val indexInOriginal = userList.indexOf(filteredItems[position])
-            if (indexInOriginal != -1) {
-                userList[indexInOriginal] = updatedItem // Update original list
-            }
-            filteredItems[position] = updatedItem // Update filtered list
-            notifyItemChanged(position)
-        }
-    }
-
-    // 🔹 Add multiple items
-    fun addItems(newItems: List<ApiResponse.Data>) {
-        val startPosition = filteredItems.size
-        userList.addAll(newItems)
-        filteredItems.addAll(newItems)
-        notifyItemRangeInserted(startPosition, newItems.size)
-    }
-
-    // 🔹 Clear all items
-    fun clearData() {
-        val oldSize = filteredItems.size
-        userList.clear()
-        filteredItems.clear()
-        notifyItemRangeRemoved(0, oldSize)
-    }
 }

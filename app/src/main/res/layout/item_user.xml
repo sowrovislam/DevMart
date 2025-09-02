@@ -1,125 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    card_view:cardCornerRadius="16dp"
-    card_view:cardElevation="8dp"
-    android:id="@+id/CardDetails"
-    android:foreground="?attr/selectableItemBackground">
+    android:layout_margin="12dp"
+    android:foreground="?attr/selectableItemBackground"
 
-    <LinearLayout
+    app:cardCornerRadius="12dp"
+    android:id="@+id/cardView"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="14dp">
+        android:padding="12dp">
 
-        <!-- Circular User Image -->
-        <ImageView
+        <!-- Left Circle Image -->
+
+        <!-- Title -->
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/userImage"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher"
-            android:background="@drawable/circle_background"
-            android:clipToOutline="true"
-            android:elevation="3dp" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="4dp"
+            android:elevation="8dp"
+            android:src="@drawable/logo"
+            app:civ_border_color="@color/button_primary"
+            app:civ_border_width="3dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.337" />
 
-        <!-- Text Container -->
+        <TextView
+            android:id="@+id/billTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Electricity Bill"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/userImage"
+            app:layout_constraintTop_toTopOf="@id/userImage"
+            android:layout_marginStart="10dp" />
+
+        <!-- Account Number -->
+        <TextView
+            android:id="@+id/accountNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Account: 1234567890"
+            android:textColor="#9CA3AF"
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="@id/billTitle"
+            app:layout_constraintTop_toBottomOf="@id/billTitle"
+            android:layout_marginTop="4dp" />
+
+        <!-- Amount -->
+
+        <!-- Due Date -->
+
+        <!-- Divider Line -->
+
+        <TextView
+            android:id="@+id/amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:text="$75.50"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+
+            android:id="@+id/dueDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Due in 3 days"
+            android:textColor="#DC0A0A"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.967"
+            app:layout_constraintStart_toEndOf="@+id/billTitle"
+            app:layout_constraintTop_toBottomOf="@id/amount" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="#1F2937"
+            app:layout_constraintTop_toBottomOf="@id/accountNumber"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp" />
+
+        <!-- Description + Edit Row -->
         <LinearLayout
+            android:id="@+id/descRow"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="6dp">
 
-            <!-- Name and Amount Row -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/userName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="User Name"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black" />
-
-                <!-- Amount + Due in vertical -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="end">
-
-                    <TextView
-                        android:id="@+id/userAmount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$250.00"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/holo_green_dark" />
-
-                    <TextView
-
-                        android:layout_marginTop="0dp"
-                        android:id="@+id/userDueAmount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Due: $50.00"
-                        android:textSize="13sp"
-                        android:textStyle="italic"
-                        android:textColor="@android:color/holo_red_dark"
-                        android:paddingTop="2dp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Number -->
             <TextView
-                android:id="@+id/userNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="+880 1234 567890"
-                android:textSize="14sp"
-                android:textColor="@android:color/darker_gray"
-                android:paddingTop="2dp" />
-
-            <!-- Date -->
-            <TextView
-                android:id="@+id/userDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="12 Aug 2025"
-                android:textSize="13sp"
-                android:textColor="@android:color/darker_gray"
-                android:paddingTop="2dp" />
-
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#E0E0E0"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="6dp" />
-
-            <!-- Description -->
-            <TextView
-                android:maxLines="1"
-                android:ellipsize="end"
                 android:id="@+id/userDescription"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Payment for groceries"
+                android:layout_weight="1"
+                android:text="This is the user description..."
+                android:textColor="#000000"
                 android:textSize="14sp"
-                android:textColor="@android:color/black" />
+                android:ellipsize="end"
+                android:singleLine="true" />
 
+            <Button
+                android:id="@+id/btnEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Edit"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:drawableLeft="@drawable/outline_edit_document_24"
+                android:drawablePadding="6dp"
+                android:backgroundTint="#22C55E" />
         </LinearLayout>
-    </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.cardview.widget.CardView>

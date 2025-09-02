@@ -44,6 +44,8 @@ class AccountFragment : Fragment() {
         // 🔹 Initialize adapter once with empty list
         adapter = UserAdapter(mutableListOf())
         recyclerView.adapter = adapter
+        adapter.reverseItems()
+        recyclerView.scrollToPosition(0)
 
         val currentUser = auth.currentUser
         val userId = currentUser?.uid
