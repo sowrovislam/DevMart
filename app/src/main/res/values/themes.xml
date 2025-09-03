@@ -3,6 +3,9 @@
     <style name="Base.Theme.DevMart" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+<!--        <item name="android:windowFullscreen">false</item>-->
+<!--        <item name="android:windowTranslucentStatus">false</item>-->
+<!--        <item name="android:windowTranslucentNavigation">false</item>-->
     </style>
 
     <style name="Theme.DevMart" parent="Base.Theme.DevMart" />

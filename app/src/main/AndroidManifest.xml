@@ -27,21 +27,32 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".EdtActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            />
         <activity
             android:name=".Details_data_Activity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".DetalisDataActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            />
         <activity
             android:name=".DetailsActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"  />
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

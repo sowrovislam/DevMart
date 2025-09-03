@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.transition.Visibility
 import com.example.devmart.R
 import com.example.devmart.databinding.FragmentHomeBinding
 
@@ -24,12 +25,13 @@ class Home : Fragment() {
 
 
 
-
+        binding.progressBar.visibility = View.VISIBLE
          // Navigate after 3 seconds
             Handler(Looper.getMainLooper()).postDelayed({
                 findNavController().navigate(R.id.action_home2_to_login)
+                binding.progressBar.visibility = View.GONE
 
-            }, 200)
+            },3000)
 
 
 

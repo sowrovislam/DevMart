@@ -10,6 +10,7 @@ import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.findNavController
 import com.example.devmart.databinding.ActivityDetailsBinding
@@ -78,6 +80,10 @@ class DetailsActivity : AppCompatActivity() {
             insets
         }
 
+
+
+
+
         binding.animationView.visibility = View.GONE
         firebaseAuth = FirebaseAuth.getInstance()
 
@@ -97,7 +103,7 @@ class DetailsActivity : AppCompatActivity() {
 
         binding.btnUpload.setOnClickListener {
             uploadData()
-            binding.btnUpload.isEnabled = false
+            binding.btnUpload.isEnabled = true
         }
     }
 
