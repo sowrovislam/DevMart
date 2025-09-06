@@ -1,5 +1,6 @@
 package com.example.devmart.Fragment
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,7 +29,7 @@ class AccountFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private val viewModel: UserViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
-    private lateinit var progressBar: ProgressBar
+    private var progressDialog: Dialog? = null
     private lateinit var adapter: UserAdapter
 
     override fun onCreateView(
@@ -38,7 +39,6 @@ class AccountFragment : Fragment() {
         _binding = FragmentAccountBinding.inflate(inflater, container, false)
         auth = FirebaseAuth.getInstance()
         recyclerView = binding.recyclerView
-        progressBar = binding.progressBar
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // 🔹 Initialize adapter once with empty list
@@ -51,10 +51,10 @@ class AccountFragment : Fragment() {
         val userId = currentUser?.uid
 
         if (userId != null) {
-            progressBar.visibility = View.VISIBLE
+            showProgressDialog()
             viewModel.fetchUserData(userId)
         } else {
-            progressBar.visibility = View.GONE
+            hideProgressDialog()
             Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
         }
 
@@ -65,7 +65,7 @@ class AccountFragment : Fragment() {
 
         // 🔹 Observe LiveData
         viewModel.userData.observe(viewLifecycleOwner) { response ->
-            progressBar.visibility = View.GONE
+            hideProgressDialog()
             if (response.success == true && response.data != null) {
                 adapter.updateData(response.data.filterNotNull())
 
@@ -122,8 +122,28 @@ class AccountFragment : Fragment() {
         )
     }
 
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun showProgressDialog() {
+
+        if (progressDialog == null) {
+            progressDialog = Dialog(requireContext())
+            progressDialog?.setContentView(R.layout.progress_dialog_recycilerview)
+            progressDialog?.setCancelable(false) // User can’t dismiss by back press
+            progressDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        }
+        progressDialog?.show()
+    }
+
+    private fun hideProgressDialog() {
+        progressDialog?.dismiss()
+    }
+
+
+
 }

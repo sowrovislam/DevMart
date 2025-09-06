@@ -1,6 +1,7 @@
 package com.example.devmart
 
 import android.Manifest
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -42,6 +43,7 @@ class DetailsActivity : AppCompatActivity() {
     private val REQUEST_STORAGE_PERMISSION = 100
     private lateinit var firebaseAuth: FirebaseAuth
     private val CONTACT_PICK_REQUEST = 1001
+    private var progressDialog: Dialog? = null
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK && result.data != null) {
@@ -84,7 +86,6 @@ class DetailsActivity : AppCompatActivity() {
 
 
 
-        binding.animationView.visibility = View.GONE
         firebaseAuth = FirebaseAuth.getInstance()
 
         if (firebaseAuth.currentUser == null) {
@@ -102,8 +103,10 @@ class DetailsActivity : AppCompatActivity() {
         }
 
         binding.btnUpload.setOnClickListener {
+            showProgressDialog()
             uploadData()
             binding.btnUpload.isEnabled = true
+
         }
     }
 
@@ -171,23 +174,23 @@ class DetailsActivity : AppCompatActivity() {
         // Validate all required fields, including due
         if (name.isEmpty() || number.isEmpty() || amount.isEmpty() || description.isEmpty() ) {
             Toast.makeText(this, "Please fill in all fields, including due date", Toast.LENGTH_SHORT).show()
-            binding.animationView.visibility = View.GONE
+            hideProgressDialog()
             return
         } else {
-            binding.animationView.visibility = View.VISIBLE
+            showProgressDialog()
         }
 
 
         if (selectedImageUri == null) {
             Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show()
-            binding.animationView.visibility = View.GONE
+
             return
         }
 
         val file = getFileFromUri(selectedImageUri!!)
         if (file == null) {
             Toast.makeText(this, "Failed to get file", Toast.LENGTH_SHORT).show()
-            binding.animationView.visibility = View.GONE
+
             return
         }
 
@@ -203,7 +206,7 @@ class DetailsActivity : AppCompatActivity() {
         val user = firebaseAuth.currentUser
         if (user == null) {
             Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
-            binding.animationView.visibility = View.GONE
+            showProgressDialog()
             return
         }
         val userId = user.uid
@@ -213,7 +216,8 @@ class DetailsActivity : AppCompatActivity() {
         apiService.uploadData(imagePart, nameRequestBody, numberRequestBody, amountRequestBody, descriptionRequestBody, userIdRequestBody, dueRequestBody)
             .enqueue(object : Callback<UploadResponse> {
                 override fun onResponse(call: Call<UploadResponse>, response: Response<UploadResponse>) {
-                    binding.animationView.visibility = View.GONE
+//                    binding.animationView.visibility = View.GONE
+                    hideProgressDialog()
                     if (response.isSuccessful) {
                         val uploadResponse = response.body()
 
@@ -238,7 +242,7 @@ class DetailsActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
                     Toast.makeText(this@DetailsActivity, "Error: ${t.message}", Toast.LENGTH_LONG).show()
-                    binding.animationView.visibility = View.GONE
+                    hideProgressDialog()
                     binding.btnUpload.isEnabled = true
                 }
             })
@@ -323,5 +327,20 @@ class DetailsActivity : AppCompatActivity() {
                 Toast.makeText(this, "No contact data received", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+
+
+    private fun showProgressDialog() {
+        if (progressDialog == null) {
+            progressDialog = Dialog(this)
+            progressDialog?.setContentView(R.layout.progress_dialog)
+            progressDialog?.setCancelable(false) // User can’t dismiss by back press
+            progressDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        }
+        progressDialog?.show()
+    }
+    private fun hideProgressDialog() {
+        progressDialog?.dismiss()
     }
 }

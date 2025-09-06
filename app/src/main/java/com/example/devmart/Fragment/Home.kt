@@ -1,5 +1,6 @@
 package com.example.devmart.Fragment
 
+import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -25,17 +26,15 @@ class Home : Fragment() {
 
 
 
+
+
         binding.progressBar.visibility = View.VISIBLE
          // Navigate after 3 seconds
             Handler(Looper.getMainLooper()).postDelayed({
                 findNavController().navigate(R.id.action_home2_to_login)
                 binding.progressBar.visibility = View.GONE
 
-            },3000)
-
-
-
-
+            },300)
 
 
 
@@ -43,6 +42,11 @@ class Home : Fragment() {
 
         return binding.root
     }
+
+
+
+
+
 
 
 }
