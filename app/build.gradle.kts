@@ -70,6 +70,8 @@ dependencies {
     implementation(libs.lottie)
     implementation(libs.okhttp)
 
+    implementation(libs.services.ads)
+
 
 
 }
